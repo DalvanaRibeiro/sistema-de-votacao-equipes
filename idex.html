@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafio Frontend Talentinhos</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f06, #4a90e2);
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .voting-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 100%;
+        }
+        h2 {
+            text-align: center;
+            color: #4a90e2;
+            margin-bottom: 20px;
+        }
+        .team-selection, .vote-selection {
+            margin-bottom: 20px;
+        }
+        .team-selection label, .vote-selection label {
+            margin-right: 10px;
+            display: block;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .vote-button {
+            background-color: #ff5733; /* Cor laranja */
+            color: #fff;
+        }
+        .vote-button:hover {
+            background-color: #e74c3c; /* Laranja mais escuro */
+        }
+        .result-button {
+            background-color: #3498db; /* Cor azul */
+            color: #fff;
+        }
+        .result-button:hover {
+            background-color: #2980b9; /* Azul mais escuro */
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            text-align: center;
+            color: #333;
+        }
+        .result-list {
+            margin-top: 10px;
+            list-style-type: none;
+            padding: 0;
+        }
+        .result-list li {
+            background-color: #f0f0f0;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="voting-container">
+        <h2>Desafio Frontend Talentinhos</h2>
+        <div class="team-selection">
+            <h3>Selecione sua equipe:</h3>
+            <label><input type="radio" name="userTeam" value="Zero Talentos"> Zero Talentos</label>
+            <label><input type="radio" name="userTeam" value="União Talentos"> União Talentos</label>
+            <label><input type="radio" name="userTeam" value="Underground"> Underground</label>
+            <label><input type="radio" name="userTeam" value="Cai Cai"> Cai Cai</label>
+            <label><input type="radio" name="userTeam" value="Tropa dos Six"> Tropa dos Six</label>
+        </div>
+        <div class="vote-selection">
+            <h3>Vote em outra equipe:</h3>
+            <div id="voteOptions">
+                <p>Selecione sua equipe primeiro</p>
+            </div>
+        </div>
+        <button class="vote-button" onclick="votar()">Votar</button>
+        <button class="result-button" onclick="revelarResultado()">Revelar Resultado</button>
+        <div class="result" id="resultado"></div>
+    </div>
+
+    <script>
+        const voteOptions = document.getElementById('voteOptions');
+        const resultadoDiv = document.getElementById('resultado');
+        let votos = {
+            "Zero Talentos": 0,
+            "União Talentos": 0,
+            "Underground": 0,
+            "Cai Cai": 0,
+            "Tropa dos Six": 0
+        };
+
+        document.querySelectorAll('input[name="userTeam"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const userTeam = this.value;
+                voteOptions.innerHTML = ''; // Limpa as opções anteriores
+
+                // Cria opções de voto, exceto a equipe do usuário
+                for (let team in votos) {
+                    if (team !== userTeam) {
+                        const label = document.createElement('label');
+                        label.innerHTML = `<input type="radio" name="voteTeam" value="${team}"> ${team}`;
+                        voteOptions.appendChild(label);
+                    }
+                }
+            });
+        });
+
+        function votar() {
+            const userTeam = document.querySelector('input[name="userTeam"]:checked');
+            const voteTeam = document.querySelector('input[name="voteTeam"]:checked');
+            
+            if (userTeam && voteTeam) {
+                votos[voteTeam.value]++;
+                alert(`Você votou na ${voteTeam.value}!`);
+            } else {
+                alert('Por favor, selecione sua equipe e uma equipe para votar.');
+            }
+        }
+
+        function revelarResultado() {
+            let resultadosOrdenados = Object.entries(votos).sort((a, b) => b[1] - a[1]);
+            let resultadoHTML = '<h3>Resultado da Votação:</h3><ul class="result-list">';
+            resultadosOrdenados.forEach(([equipe, votos]) => {
+                resultadoHTML += `<li>${equipe}: ${votos} votos</li>`;
+            });
+            resultadoHTML += '</ul>';
+            resultadoDiv.innerHTML = resultadoHTML;
+        }
+    </script>
+</body>
+</html>
